@@ -44,4 +44,22 @@ const createStock = async (req, res) => {
     }
 }
 
-module.exports = { createStock }
+const getStock = async(req,res) =>{
+    try {
+        const getStock = await Stock.find();
+        if(getStock.length > 0) {
+            res.status(200).json({
+                message:"Data feteched successfully",
+                data: getStock
+            })
+        } else{
+            res.sta
+        }
+    } catch (e) {
+        res.status(500).json({
+            message:e.message
+        })
+    }
+}
+
+module.exports = { createStock, getStock }

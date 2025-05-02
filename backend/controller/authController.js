@@ -105,5 +105,23 @@ const login = async (req, res) => {
         })
     }
 }
-
-module.exports = { register, login }
+const getUser = async(req,res) =>{
+    try {
+        const getUsers = await User.find({role:"staff"})
+        if(getUser.length > 0) {
+            res.status(200).json({
+                message:"Data fetched successfully",
+                data:getUsers
+            })
+        } else {
+            res.status(404).json({
+                message:"No data found"
+            })
+        }
+    } catch(e) {
+        res.status(500).json({
+            message:e.message
+        })
+    }
+}
+module.exports = { register, login, getUser }

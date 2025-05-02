@@ -35,4 +35,23 @@ const createTable = async(req, res) =>
     }
 }
 
-module.exports = {createTable}
+const getTables = async(req,res) => {
+    try{
+        const data = await Table.find()
+        if(data.length > 0) {
+            res.status(200).json({
+                message:"Data fetched successfully",
+                data:data
+            })
+        } else {
+            res.status(404).json({
+                message:"No data found"
+            })
+        }
+    } catch(e) {
+        res.status(500).json({
+            message:e.message
+        })
+    }
+}
+module.exports = {createTable, getTables}

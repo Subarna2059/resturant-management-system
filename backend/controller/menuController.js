@@ -1,6 +1,7 @@
 const z = require("zod");
 const path = require("path")
 const { Menu, File, Category } = require("../model/schema");
+const { log } = require("console");
 const zodSchema = z.object({
     title: z.string().trim().min(3, { message: "Title must be atleast 3 character" }),
     description: z.string().trim().min(5, { message: "Title must be atleast 5 character" }),
@@ -14,7 +15,9 @@ const zodFileSchema = z.object({
     path: z.string(),
 })
 const createMenu = async (req, res) => {
-    let { title, description, category, price,} = req.body;
+    let { title, description, category, price} = req.body;
+    console.log(req.file);
+    
     title = title.trim().toLowerCase()
     description = description.trim().toLowerCase()
     category = category.trim().toLowerCase()
@@ -62,7 +65,6 @@ const createMenu = async (req, res) => {
                         message:"category not found"
                     })
                 }
-                
             }
         } else {
             res.status(403).json({
@@ -82,7 +84,9 @@ const updateMenu = async (req, res) => {
     price = Number(price)
     const { id } = req.params
     const file = req.file
-    const { originalname, mimetype, size, path } = req.file
+    if(file) {
+        const { originalname, mimetype, size, path } = req.file
+    }
     const validate = zodSchema.safeParse({ title: title, description: description, category: category, price: price })
     try {
         if (validate.success) {
@@ -96,18 +100,18 @@ const updateMenu = async (req, res) => {
                     { _id: id },
                     { title, description, category, price },
                     { new: true });
-                if (originalname) {
+                if (file) {
                     const findFileAndUpdate = await File.updateOne({ belongsToId: id }, {
                         originalName: originalname,
                         mimeType: mimetype,
                         size: size,
                         belongsTo: findAndUpdate.title
                     })
-                    if (findAndUpdate && findFileAndUpdate) {
+                    if (findAndUpdate || findFileAndUpdate) {
                         res.status(200).json({
                             message: "Data update successful",
                             data: findAndUpdate,
-                            file :findFileAndUpdate,
+                            file :findFileAndUpdate||null,
                         })
                     } else {
                         res.status(500).json({
@@ -166,15 +170,16 @@ const getMenuAccordingToCategory = async (req, res) => {
                 res.status(200).json({
                     data:findMenu,
                     file:file,
-                }).download(path.resolve(file[0].path), file[0].originalName)
+                })
+                // .download(path.resolve(file[0].path), file[0].originalName)
             } else {
-                res.status(404).json({
+                res.status(200).json({
                     message:"No data found"
                 })
             }
         } else {
             res.status(404).json({
-                message:"Data not found"
+                message:"Catrgory not found"
             })
         }
     } catch (e) {
@@ -204,4 +209,26 @@ const deleteMenu = async(req,res) => {
         })
     }
 }
-module.exports = { createMenu, updateMenu, getMenu, getMenuAccordingToCategory, deleteMenu }
+const getIndividualMenu = async(req,res) => {
+    const {id} = req.params
+    try{
+        const data = await Menu.findOne({_id:id})
+        const file = await File.findOne({belongsToId:id})
+        if(data) {
+            res.status(200).json({
+                message:"Data fetched successfully",
+                data:data,
+                file:file
+            })
+        } else {
+            res.status(404).json({
+                message:"No data found"
+            })
+        }
+    } catch(e) {
+        res.status(500).json({
+            message:e.message
+        })
+    }
+}
+module.exports = { createMenu, updateMenu, getMenu, getMenuAccordingToCategory, deleteMenu,getIndividualMenu }

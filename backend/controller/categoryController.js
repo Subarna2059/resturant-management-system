@@ -75,5 +75,24 @@ const deleteCategory = async(req,res) =>{
         })
     }
 }
-
-module.exports = {createCategory, allCategory, deleteCategory}
+const getCategory = async(req,res) =>{
+    const {slug} = req.params
+    try{
+        const data = await Category.findOne({title:slug})
+        if(data) {
+            res.status(200).json({
+                message:"data fetched successfully",
+                data:data
+            })
+        } else {
+            res.status(200).json({
+                message:"No category found"
+            })
+        }
+    } catch (e) {
+        res.status(500).json({
+            message:e.json
+        })
+    }
+}
+module.exports = {createCategory, allCategory, deleteCategory, getCategory}
