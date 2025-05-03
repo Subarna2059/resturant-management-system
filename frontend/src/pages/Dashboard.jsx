@@ -6,14 +6,30 @@ import Banner from '../components/partials/Banner'
 import { getTable } from '../actions/table-action'
 import TableStorage from '../components/common/TableStorage'
 import { useNavigate } from 'react-router-dom'
+import { getLocalStorage } from '../utils/storage'
+import { toast } from 'react-toastify'
 
 const Dashboard = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const table = useSelector(state=>state.getTableReducer)
   const accessTable = async() =>{
-    const res = await axiosInstance.get("/table")
-    dispatch(getTable(res.data.data))
+    try{
+      const res = await axiosInstance.get("/table",{
+        headers:{
+          Authorization:`Bearer ${getLocalStorage()}`
+        }
+      })
+      if(res) {
+        dispatch(getTable(res.data.data))
+      } else {
+        toast("Something went wrong")
+      }
+    } catch (e) {
+      navigate("/menu")
+      toast(e.response?.data.message)
+    }
+    
   }
   const onTableClick = (id) => {
     navigate(`/table/${id}`)

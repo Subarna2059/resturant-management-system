@@ -13,12 +13,12 @@ const storage = multer.diskStorage({
     }
 })
 const upload = multer({storage:storage})
-router.post("/", upload.single("file"), createMenu)
-router.put("/:id", upload.single("file"), updateMenu)
+router.post("/", upload.single("file"),authMiddleware,checkRoleMiddleware, createMenu)
+router.put("/:id", upload.single("file"),authMiddleware,checkRoleMiddleware, updateMenu)
 router.get("/", getMenu)
-router.get("/individual/:id", getIndividualMenu)
+router.get("/individual/:id",authMiddleware, getIndividualMenu)
 router.get("/:id",  getMenuAccordingToCategory)
-router.delete("/:id", deleteMenu)
+router.delete("/:id",authMiddleware,checkRoleMiddleware, deleteMenu)
 
 
 module.exports = router

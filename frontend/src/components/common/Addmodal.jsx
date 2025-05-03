@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { insertMenu } from '../../actions/insertMenu-action'
 import { setAddModalFalse } from '../../actions/addModal-action'
 import { useNavigate } from 'react-router-dom'
+import { getLocalStorage } from '../../utils/storage'
 
 const Addmodal = ({getMenu, title,dataToEdit}) => {
     const [category, setCategory] = useState([])
@@ -15,7 +16,7 @@ const Addmodal = ({getMenu, title,dataToEdit}) => {
         try{
             const res = await axiosInstance.get("/category", {
                 headers:{
-                    Authorization:`Bearer `
+                    Authorization:`Bearer ${getLocalStorage()}`
                 }
             })
             setCategory(res.data.data)
@@ -41,7 +42,7 @@ const Addmodal = ({getMenu, title,dataToEdit}) => {
                 } else {
                     const res = await axiosInstance.put(`/menu/${dataToEdit._id}`,formData,{
                         headers:{
-                            Authorization:`Bearer `,
+                            Authorization:`Bearer ${getLocalStorage()}`,
                         }
                     })
                     if(res) {
@@ -62,7 +63,7 @@ const Addmodal = ({getMenu, title,dataToEdit}) => {
                 try{
                     const res = await axiosInstance.post("/menu",formData,{
                         headers:{
-                            Authorization:`Bearer `,
+                            Authorization:`Bearer ${getLocalStorage()}`,
                         }
                     })
                     if(res) {

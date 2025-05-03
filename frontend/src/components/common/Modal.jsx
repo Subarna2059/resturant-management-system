@@ -6,6 +6,7 @@ import { axiosInstance } from '../../utils/APIcalls'
 import { insertOrder } from '../../actions/insertOrder-action'
 import { selectedItems } from '../../actions/selectedItems-action'
 import { useNavigate } from 'react-router-dom'
+import { getLocalStorage } from '../../utils/storage'
 
 const Modal = ({ categoryList, title, dataForEdit, idForEdit }) => {
     const dispatch = useDispatch()
@@ -31,17 +32,16 @@ const Modal = ({ categoryList, title, dataForEdit, idForEdit }) => {
     }
     const firstRenderMenu = async () => {
         try {
-            if(dataForEdit) {
-            console.log("a");
+            if(dataForEdit && dataForEdit.orderName != "" ) {
             const res = await axiosInstance.get(`/category/${selectedData.category}`)
             const id = await res.data.data._id
             const menuRes = await axiosInstance.get(`/menu/${id}`)
             dispatch(selectedItems(menuRes.data.data))
-            } else {
-                const res = await axiosInstance.get(`/category/${categoryList[0].title}`)
-                const id = res.data.data._id
-                const menuRes = await axiosInstance.get(`/menu/${id}`)
-                dispatch(selectedItems(menuRes.data.data))
+        } else {
+            const res = await axiosInstance.get(`/category/${categoryList[0].title}`)
+            const id = res.data.data._id
+            const menuRes = await axiosInstance.get(`/menu/${id}`)
+            dispatch(selectedItems(menuRes.data.data))
             }
         } catch {
             toast("Failed to fetch menu items")
@@ -76,7 +76,7 @@ const Modal = ({ categoryList, title, dataForEdit, idForEdit }) => {
                         quantity:selectedData.quantity
                     },{
                         headers:{
-                            Authorization:`Bearer`
+                            Authorization:`Bearer ${getLocalStorage()}`
                         }
                     })
                     if (res) {
@@ -91,7 +91,7 @@ const Modal = ({ categoryList, title, dataForEdit, idForEdit }) => {
                         quantity:selectedData.quantity,
                     },{
                         headers:{
-                            Authorization:`Bearer`
+                            Authorization:`Bearer ${getLocalStorage()}`
                         }
                     })
                     if(res) {
@@ -116,17 +116,22 @@ const Modal = ({ categoryList, title, dataForEdit, idForEdit }) => {
         }
     }
     useEffect(() => {
-        if(dataForEdit) {
+        firstRenderMenu(),
+        getTableList()
+        if(dataForEdit && dataForEdit.orderName != "") {
             console.log(dataForEdit.orderName);
             dispatch(insertOrder({name:"menu", value:dataForEdit.orderName}))
             dispatch(insertOrder({name:"category", value:dataForEdit.category}))
             dispatch(insertOrder({name:"table", value:dataForEdit.table}))
             dispatch(insertOrder({name:"quantity", value:dataForEdit.quantity}))
             dispatch(insertOrder({name:"price", value:dataForEdit.price}))
+        } else {
+            dispatch(insertOrder({name:"menu", value:menuList[0]?.title}))
+            dispatch(insertOrder({name:"category", value:categoryList[0].title}))
+            dispatch(insertOrder({name:"table", value:"table1"}))
+            dispatch(insertOrder({name:"quantity", value:0}))
+            dispatch(insertOrder({name:"price", value:menuList[0]?.price}))
         }
-        console.log(selectedData);
-        firstRenderMenu(),
-        getTableList()
     }, [])
     return (
         <>
@@ -150,7 +155,7 @@ const Modal = ({ categoryList, title, dataForEdit, idForEdit }) => {
                                     categoryList && categoryList.length > 0 ?
                                         categoryList.map((items, index) => {
                                             return (
-                                                <option key={index}>{items.title}</option>
+                                                <option key={index} value={items.title}>{items.title}</option>
                                             )
                                         })
                                         : <option>No items found</option>
@@ -164,7 +169,7 @@ const Modal = ({ categoryList, title, dataForEdit, idForEdit }) => {
                                     menuList && menuList.length > 0 ?
                                         menuList.map((items, index) => {
                                             return (
-                                                <option key={index}>{items.title}</option>
+                                                <option key={index} value={items.title}>{items.title}</option>
                                             )
                                         })
                                         : <option>No items found</option>
@@ -178,7 +183,7 @@ const Modal = ({ categoryList, title, dataForEdit, idForEdit }) => {
                                     tables?.length > 0 ?
                                         tables?.map((items, index) => {
                                             return (
-                                                <option key={index}>{items?.title}</option>
+                                                <option value={items.title} key={index}>{items?.title}</option>
                                             )
                                         })
                                         : <option>No items found</option>

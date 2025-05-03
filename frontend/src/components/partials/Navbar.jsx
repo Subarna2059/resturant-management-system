@@ -15,6 +15,7 @@ const Navbar = () => {
                 <div onClick={()=>navigate("/order")} className='cursor-pointer'>Orders</div>
                 <div onClick={()=>navigate("/stock")} className='cursor-pointer'>Stock</div>
                 <div onClick={()=>navigate("/staff")} className='cursor-pointer'>Staff</div>
+                <div onClick={()=>navigate("/register")} className='cursor-pointer'>Register</div>
             </div>
         </div>
     </div>

@@ -12,10 +12,12 @@ import Modal from '../components/common/Modal'
 import { setModalTrue } from '../actions/modal-action'
 import Addmodal from '../components/common/Addmodal'
 import { setAddModalTrue } from '../actions/addModal-action'
+import { getLocalStorage } from '../utils/storage'
 
 const Menu = () => {
   const [loading, setLoading] = useState(false)
   const [dataForEdit, setDataForEdit] = useState()
+  const [login, setLogin] = useState(false)
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const modal = useSelector(state=>state.modalReducer)
@@ -91,6 +93,9 @@ const Menu = () => {
   useEffect(() => {
     fetchMenu(),
     fetchCategory()
+    if(getLocalStorage() != null) {
+      setLogin(true)
+    }
   }, [])
   return (
     <>
@@ -128,9 +133,13 @@ const Menu = () => {
                     </>:<div>No category found</div>
                   }
                   <div className='xl:w-[85vw] flex justify-end'>
-                    <button onClick={()=>showModal()} className=' mr-2 cursor-pointer bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300'>Add order</button>
-                    <button onClick={()=>showAddMenuModal()} className=' cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300'>Add menu</button>
-                  </div>
+                    {
+                      login ? <>
+                      <button onClick={()=>showModal()} className=' mr-2 cursor-pointer bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300'>Add order</button>
+                      <button onClick={()=>showAddMenuModal()} className=' cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300'>Add menu</button>
+                      </>:<></>
+                    }
+                    </div>
                   </div>
                   <div className='w-[100%] flex flex-wrap justify-center mt-4'>
                     {
