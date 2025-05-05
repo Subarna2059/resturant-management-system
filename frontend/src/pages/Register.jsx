@@ -22,7 +22,7 @@ const Register = () => {
     const handleOnSubmit = async() => {
         try{
             if(inputData.userName =="" || inputData.password=="" || inputData.email=="" ){
-                toast("Invalid input")
+                toast.error("Invalid input")
             } else {
                 const res = await axiosInstance.post("/auth/register",{
                     userName:inputData.userName,
@@ -39,11 +39,11 @@ const Register = () => {
                     navigate("/staff")
                   toast("Staff register successful")
                 } else {
-                    toast(res.response.data.message)
+                    toast.error(res.response.data.message)
                 }
             }
         } catch(e) {
-            toast(e.response.data.message)
+            toast.error(e.response.data.message)
         }
     }
     const handleOnCancleRegister = () =>{

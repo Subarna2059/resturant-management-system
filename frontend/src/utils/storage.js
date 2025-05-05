@@ -5,3 +5,7 @@ export function  setLocalStorage(token) {
 export function getLocalStorage() {
    return localStorage.getItem('token')
 }
+
+export function clearLocalStorage() {
+    return localStorage.clear()
+}

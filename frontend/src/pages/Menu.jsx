@@ -31,7 +31,7 @@ const Menu = () => {
       dispatch(getMenu(res.data.data))
       setLoading(false)
     } catch (e) {
-      toast("Something went wrong")
+      toast.error("Something went wrong")
     }
   }
   const fetchCategory = async() =>{
@@ -42,7 +42,7 @@ const Menu = () => {
       setLoading(false)
     } catch {
       navigate("/menu")
-      toast("Failed to fetch categories")
+      toast.error("Failed to fetch categories")
     }
   }
   const setMenuAccordingToCategory = async (id) =>{
@@ -56,7 +56,7 @@ const Menu = () => {
       }
       setLoading(false)
     } catch {
-      toast("Something went wrong")
+      toast.error("Something went wrong")
     }
   }
   const showModal = () =>{
@@ -77,7 +77,7 @@ const Menu = () => {
         fetchMenu()
         toast("Data deleted successfully")
       } else {
-        toast("Failed to delete data")
+        toast.error("Failed to delete data")
       }
     }
   }
@@ -87,7 +87,7 @@ const Menu = () => {
       setDataForEdit(res.data.data)
       dispatch(setAddModalTrue())
     } catch {
-      toast("Failed to get item for edit")
+      toast.error("Failed to get item for edit")
     }
   }
   useEffect(() => {

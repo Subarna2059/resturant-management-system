@@ -23,11 +23,11 @@ const Order = () => {
         )
         if(res.data.data) {
           dispatch(getOrder(res.data.data))
-        setLoading(false)
+          setLoading(false)
         }
         setLoading(false)
       } catch (e) {
-        toast(e.response?.data.message || "Somwthing went wrong")
+        toast.error("Something went wrong")
       }
     }
     useEffect(()=>{

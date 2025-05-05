@@ -18,7 +18,7 @@ const Login = () => {
                 [e.name]:e.value
             })
         } catch {
-            toast("Something went wrong ")
+            toast.error("Something went wrong ")
         }
     }
     useEffect(()=>{
@@ -45,7 +45,7 @@ const Login = () => {
                 }
             }
         } catch(e) {
-            toast(e.response?.data.message||"Something went wrong")
+            toast.error(e.response?.data.message||"Something went wrong")
         }
     }
   return (

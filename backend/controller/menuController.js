@@ -146,7 +146,7 @@ const getMenu = async (req, res) => {
                 message: "Data fetched successfully",
                 data: data,
                 file:fileData
-            })
+            }).download(path.resolve(fileData[0].path), file[0].originalName)
         } else {
             res.status(400).json({
                 message: "No record found"
@@ -171,7 +171,7 @@ const getMenuAccordingToCategory = async (req, res) => {
                     data:findMenu,
                     file:file,
                 })
-                // .download(path.resolve(file[0].path), file[0].originalName)
+                .download(path.resolve(file[0].path), file[0].originalName)
             } else {
                 res.status(200).json({
                     message:"No data found"

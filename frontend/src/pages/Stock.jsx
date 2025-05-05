@@ -32,7 +32,7 @@ const Stock = () => {
       dispatch(getStock(res.data.data))
       setLoading(false)
     } catch (e) {
-      toast("Something went wrong")
+      toast.error("Something went wrong")
     }
   }
   const showModal = () => {
@@ -59,11 +59,11 @@ const Stock = () => {
           getStockData(),
           toast("Data deleted successfully")
         } else {
-          toast("Something went wrong")
+          toast.error("Something went wrong")
         }
       }
     } catch(e) {
-      toast(e.response?.data.message ||"Something went wrong")
+      toast.error(e.response?.data.message ||"Something went wrong")
     }
   }
   const handleOnEditClick = async(id) => {

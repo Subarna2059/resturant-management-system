@@ -124,4 +124,24 @@ const getUser = async(req,res) =>{
         })
     }
 }
-module.exports = { register, login, getUser }
+
+const deleteUser = async(req,res) =>{
+    const {id} = req.params
+    try {
+        const findAndDelete =await User.findByIdAndDelete({_id,id}) 
+        if(findAndDelete) {
+            res.status(200).json({
+                message:"Data deleted successfully"
+            })
+        } else{
+            res.status(500).json({
+                message:"Something went wrong"
+            })
+        }
+    } catch (e) {
+        res.status(500).json({
+            message:"Something went wrong"
+        })
+    }
+}
+module.exports = { register, login, getUser, deleteUser }

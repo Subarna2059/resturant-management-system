@@ -23,11 +23,11 @@ const Dashboard = () => {
       if(res) {
         dispatch(getTable(res.data.data))
       } else {
-        toast("Something went wrong")
+        toast.error("Something went wrong")
       }
     } catch (e) {
       navigate("/menu")
-      toast(e.response?.data.message)
+      toast.error(e.response?.data.message)
     }
     
   }

@@ -61,7 +61,7 @@ const TableOrder = () => {
                 }
             }
         } catch (e) {
-            toast(e.message)
+            toast.error(e.message)
         }
     }
     const onEditClick = async(id) => {
@@ -74,10 +74,10 @@ const TableOrder = () => {
                 dispatch(setModalTrue())
                 setIdForEdit(id)
             } else {
-                toast("Something went wrong")
+                toast.error("Something went wrong")
             }
         } catch (e){
-            toast(e.message)
+            toast.error(e.response.data.message || "Something went wrong")
         }
     }
     useEffect(()=>{

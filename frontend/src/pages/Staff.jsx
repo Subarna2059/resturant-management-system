@@ -24,11 +24,22 @@ export const Staff = () => {
       dispatch(getUser(res.data.data))
       setLoading(false)
     } catch (e) {
-      toast(e.response.data.message)
+      toast.error(e.response.data.message)
     }
   }
   const registerStaff = () => {
     navigate("/register")
+  }
+  const onDeleteClick = async(id) => {
+    try {
+      const res = await axiosInstance.delete(`/auth/staff/delete/${id}`,{
+        headers:{
+          Authorization:  `Bearer ${getLocalStorage()}`
+        }
+      })
+    } catch(e) {
+      toast.error( e.response?.data.message || "Something went wrong")
+    }
   }
   useEffect(() => {
     fetchUser()
@@ -53,7 +64,8 @@ export const Staff = () => {
                       <tr>
                         <th className='border-b-1 border-gray-300 border-r-1 py-4 px-4'>User Name</th>
                         <th className='border-b-1 border-gray-300 border-r-1 py-4 px-4'>email</th>
-                        <th className='border-b-1 border-gray-300  py-4 px-4'>Number</th>
+                        <th className='border-b-1 border-gray-300 border-r-1 py-4 px-4'>Number</th>
+                        <th className='border-b-1 border-gray-300  py-4 px-4'>Action</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -71,10 +83,13 @@ export const Staff = () => {
                                   items.email
                                 }
                               </td>
-                              <td className='border-b-1 border-gray-300  py-2 px-2 xl:w-48'>
+                              <td className='border-b-1 border-gray-300  border-r-1 px-2 xl:w-48'>
                                 {
-                                  items.number
+                                  items.email
                                 }
+                              </td>
+                              <td className='border-b-1 border-gray-300  py-2 px-2 xl:w-48'>
+                                <button onClick={()=>onDeleteClick(items._id)} className='px-4 py-2 bg-red-600 text-white cursor-pointer rounded-md hover:bg-red-700 transition'>Delete</button>
                               </td>
                             </tr>
                           )
